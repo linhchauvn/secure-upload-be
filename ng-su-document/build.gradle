@@ -1,0 +1,56 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://nexus.devops.affinionservices.com/repository/cxrewards/")
+        credentials {
+//            username = "$artifactory_user"
+//            password = "$artifactory_password"
+            username = 'admin'
+            password = 'VpfPQ03vgTac'
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.security:spring-security-crypto'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config:3.0.5'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.0.5'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'com.h2database:h2'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'com.auth0:java-jwt:3.18.2'
+    implementation 'org.thymeleaf:thymeleaf-spring5'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+    implementation 'com.amazonaws:aws-java-sdk-pinpoint'
+    implementation 'com.amazonaws:aws-java-sdk-sts'
+    implementation 'com.cxloyalty.lib.logging:cxrewards-logging:1.0.7'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.register("bootRunDev") {
+    group = "application"
+    description = "Run the Spring Boot application with the dev profile"
+    doFirst {
+        tasks.bootRun.configure {
+            systemProperty("spring.profiles.active", "dev")
+        }
+    }
+    finalizedBy("bootRun")
+}
+
+test {
+    useJUnitPlatform()
+}

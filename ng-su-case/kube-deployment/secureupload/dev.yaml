@@ -1,0 +1,91 @@
+controller:
+  create: true
+  # image:
+    # repository: this will be explicitly determined hence not adding here
+    # tag: this will be explicitly determined hence not adding here
+  kind: Deployment
+  annotations:
+    osiris.deislabs.io/enabled: "true"
+    osiris.deislabs.io/metricsCheckInterval: "1800"
+    osiris.deislabs.io/minReplicas : "1"
+  extraEnv:
+    SPRING_PROFILES_ACTIVE: dev
+    spring.profiles.active: "dev"
+    spring.cloud.config.uri: "https://ng-config-server.int.dev.affinionservices.com/config-server"
+    # FIREHOSE_STREAM_REGION: eu-west-1
+    # FIREHOSE_API_STREAM: gce-dev-api-kinesis-firehose-stream
+    # FIREHOSE_ERROR_STREAM: gce-dev-exceptions-kinesis-firehose-stream
+    # FIREHOSE_TRACE_STREAM: gce-dev-trace-kinesis-firehose-stream
+  podAnnotations:
+    osiris.deislabs.io/enabled: "true"
+    # iam.amazonaws.com/role: cxrewards-firehose-access
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "5556"
+    prometheus.io/scrape: "true"
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 80
+    periodSeconds: 10
+    timeoutSeconds: 80
+    failureThreshold: 5
+    successThreshold: 1
+    kind:
+      httpGet:
+        path: /case-service/actuator/health
+        port: 8082
+        scheme: HTTP
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 80
+    periodSeconds: 10
+    timeoutSeconds: 80
+    failureThreshold: 5
+    successThreshold: 1
+    kind:
+      httpGet:
+        path: /case-service/actuator/health
+        port: 8082
+        scheme: HTTP
+  ports:
+    - containerPort: 8082
+      name: app
+      protocol: TCP
+    - containerPort: 5556
+      name: metrics
+      protocol: TCP   
+  resources:
+    limits:
+      cpu: 500m
+      memory: 800Mi
+    requests:
+      cpu: 400m
+      memory: 128Mi
+  # envFromConfigMap: cxrewards-mcc-preferences-admin-api-config
+  # envFromSecrets: mcc-preferences-admin-api-secrets    
+    
+service:
+  create: true
+  annotations:
+    osiris.deislabs.io/enabled: "true"
+    osiris.deislabs.io/deployment: ng-su-case
+    osiris.deislabs.io/ingressHostname: su-case.int.dev.affinionservices.com
+  ports:
+  - portName: app
+    servicePort: 80
+    targetPort: 8082
+    protocol: TCP
+  - portName: metrics
+    servicePort: 5556
+    targetPort: 5556
+    protocol: TCP  
+  type: ClusterIP
+
+ingress:
+  create: true
+  annotations:
+    route53mapper: enabled
+  hosts:
+    - su-case.int.dev.affinionservices.com   
+  backends:
+  - path: /
+    servicePort: 80  # port on which the service is exposed

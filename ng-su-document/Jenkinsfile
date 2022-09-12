@@ -1,0 +1,12 @@
+@Library("nextgen-jenkins-library@MVP-helm") _  
+secureuploadDeliveryPipeline {  
+    buildCommand        = "chmod 777 gradlew && pwd && ls && ./gradlew build --refresh-dependencies && ls ./build/libs"
+    // testCommand         = "./gradlew jacocoTestCoverageVerification jacocoTestReport test"
+    // codeAnalysisCommand = "./gradlew sonarqube -x test"
+    buildJavaVersion    = "jdk11" // java version required for build
+    serviceName         = "ng-su-document"
+    ecrRegistryPattern  = "ng-su-document"  // usually cxrewards-cds-<env>
+    buildBranch         = "development" // branch which will be used primarily to build higher environments
+    devBuildBranch      = "development" // branch which will be used primarily to build the dev environment
+//    slackChannel        = ""
+}

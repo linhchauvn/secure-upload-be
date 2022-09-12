@@ -1,0 +1,101 @@
+# context path
+server:
+  servlet.context-path: /admin-service
+  port: 8081
+
+spring:
+  datasource: # DB
+    url: "jdbc:postgresql://dev-1-apg-live.cluster-cjhbkwdcphly.eu-west-1.rds.amazonaws.com:5432/secure_upload?currentSchema=admin"
+    driverClassName: org.postgresql.Driver
+    username: secure_upload
+    password: "skjbdjjbw^991"
+    hikari.maxLifeTime: 600000
+    test-while-idle: true
+    validation-query: "SELECT 1;"
+    time-between-eviction-runs-millis: 300000
+  flyway:
+    baselineOnMigrate: true
+  jpa: # JPA / HIBERNATE
+    database: POSTGRESQL
+    show-sql: false
+    hibernate.ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://ng-auth.int.dev.affinionservices.com/oauth
+
+# internal properties
+internal:
+  caseServiceBaseUrl: "https://api.dev.affinionservices.com/case-service"
+  documentServiceBaseUrl: "https://api.dev.affinionservices.com/document-service"
+  customerTokenCheckPath: /workspace/%s/customer-token
+  customerSignicatCheckPath: /workspace/%s/customer-signicat
+  deleteCaseByClientPath: /case/client/%s
+  deleteWorkspaceByThirdPartyPath: /workspace/third-party/%s
+  sendResetPasswordEmailPath: /communication/user/reset-password
+  resetPasswordUrl: https://secureupload.dev.affinionservices.com/forgotpassword?token=%s
+  caseDetailUrl: https://secureupload.dev.affinionservices.com/case/%s
+  getDocumentListPath: /documents
+  getDocumentContentPath: /document/%s/content
+  bulkUpdateDocumentPath: /document/bulk-update
+  uploadSignicatFilePath: "/document/%s/upload-signicat-file"
+  getCasePath: /case/%s
+# signicat
+signicat:
+  baseUrl: "https://preprod.signicat.com"
+  authorizePath: "/oidc/authorize"
+  getTokenPath: "/oidc/token"
+  userInfoPath: "/oidc/userinfo"
+  uploadDocPath: "/sign/documents"
+  createSignOrderPath: "/sign/orders"
+  getSignOrderStatusPath: "/sign/orders/%s/tasks/%s/status"
+  getPackagingTaskStatusPath: "/sign/orders/%s/packaging-tasks/%s/status"
+  getPackagingDocPath: "/sign/orders/%s/packaging-tasks/%s/result"
+  clientId: "test.affinion-asp.oidc"
+  clientSecret: "GxTWqiLIdZDJts-JjwhdrGPTpeD6pNa_HDhgDg90K0o"
+  redirectUrl: "https://secureupload.dev.affinionservices.com/signicat-redirect"
+  signingRedirectUrl: "https://secureupload.dev.affinionservices.com/signicat-e-sign-redirect"
+  signicatMethodName:
+    nemid: "da"
+    nbid: "no"
+    nbid-mobil: "no"
+    sbid: "sv"
+
+communication:
+  tenantId: "3000001"
+  server: "https://ng-api.affinionservices.com"
+  endpoint: "communications"
+  applicationId: "2ac746c2ee5544be9744ddb70c943a9e"
+  senderIdentity: "ngcommunications@cxloyalty.com"
+  templates:
+    resetPassword: "Secure_Upload_Reset_Password_EN"
+    caseUpdate: "Secure_Upload_New_Upload_To_Case_EN"
+    workspaceDeletion: "Secure_Upload_Request_Workspace_Deletion_EN"
+
+ngAuth:
+  clientId: "admin-service"
+  clientSecret: "4723f3d0-61b6-432b-a502-b7513f97d709"
+  grantType: "client_credentials"
+  tenantId: "3000001"
+  server: "https://ng-auth.int.dev.affinionservices.com"
+  token: "oauth/protocol/openid-connect/token"
+  jwk-set-uri: ${ngAuth.server}/oauth/protocol/openid-connect/certs
+  login-api: "/auth/keycloak/login"
+  create-user: "/auth/users/keycloak"
+  update-password: "/auth/key/password"
+  retrieve-user: "/auth/users/%s"
+  update-user: "/auth/users/%s"
+  delete-user: "/auth/users/%s"
+  keycloak-server: "https://platform-keycloak.int.dev.affinionservices.com"
+  update-username: "/auth/admin/realms/secure-upload/users/%s"
+
+customJwt:
+  key: "Jmnv6Rh1PXJsyJU9"
+  ivVector: "qy10NEOvj5voU794"
+  issuer: "secure.upload"
+  hmacsecret: "RfUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6"
+
+basicAuth:
+  username: "internal"
+  password: "internal"

@@ -1,0 +1,8 @@
+---
+jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:5555/jmxrmi
+username:
+password:
+ssl: false
+
+rules:
+  - pattern: ".*"

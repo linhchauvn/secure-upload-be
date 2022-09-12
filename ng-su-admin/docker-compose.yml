@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  #admin service
+  admin-service:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081

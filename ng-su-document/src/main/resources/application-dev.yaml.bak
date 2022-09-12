@@ -1,0 +1,80 @@
+# context path
+server:
+  servlet.context-path: /document-service
+  port: 8083
+
+#aws s3 config properties
+amazonProperties:
+  awsRegion: eu-west-1
+  bucketName: secure-upload-document-dev
+
+# internal properties
+internal:
+  caseServiceBaseUrl: "https://api.dev.affinionservices.com/case-service"
+  adminServiceBaseUrl: "https://api.dev.affinionservices.com/admin-service"
+  addDocumentToWorkspacePath: /workspace/add-document
+  setDocumentActionForCasePath: /case/%s/doc-action
+  getCasePath: /case/%s
+  getWorkspacePath: /workspace/%s
+  createNotificationPath: /notification/create
+  getAgentByIdApiPath: /agent/%s
+  getThirdPartyUserByIdApiPath: /thirdparty-user/%s
+  triggerUploadDocumentEmail: /send-case-update-email
+#  getPackagingTaskResultPath: "/signicat/packaging-result"
+# ===============================
+# DB
+# ===============================
+#spring.jpa.defer-datasource-initialization=true
+spring:
+  datasource:
+    url: "jdbc:postgresql://dev-1-apg-live.cluster-cjhbkwdcphly.eu-west-1.rds.amazonaws.com:5432/secure_upload?currentSchema=document"
+    driverClassName: org.postgresql.Driver
+    username: secure_upload
+    password: "skjbdjjbw^991"
+    hikari.maxLifeTime: 600000
+    test-while-idle: true
+    validation-query: "SELECT 1;"
+    time-between-eviction-runs-millis: 300000
+  flyway:
+    baselineOnMigrate: true
+
+# ===============================
+# JPA / HIBERNATE
+# ===============================
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate.ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://ng-auth.int.dev.affinionservices.com/oauth
+# File upload max size
+  servlet:
+    multipart.max-file-size: 20MB
+    multipart.max-request-size: 20MB
+
+ngAuth:
+  clientId: "admin-service"
+  clientSecret: "4723f3d0-61b6-432b-a502-b7513f97d709"
+  grantType: "client_credentials"
+  tenantId: "3000001"
+  server: "https://ng-auth.int.dev.affinionservices.com"
+  token: "oauth/protocol/openid-connect/token"
+  jwk-set-uri: ${ngAuth.server}/oauth/protocol/openid-connect/certs
+
+customJwt:
+  issuer: "secure.upload"
+  hmacsecret: "RfUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6"
+
+basicAuth:
+  username: "internal"
+  password: "internal"
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE

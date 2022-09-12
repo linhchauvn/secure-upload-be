@@ -1,0 +1,9 @@
+#spring:
+#  application.name: ng-su-case
+#  profiles.active: ${spring.profiles.active}
+#  config.import: optional:configserver:${spring.cloud.config.uri}
+
+spring:
+  application.name: ng-su-case
+  profiles.active: dev
+  config.import: optional:configserver:https://ng-config-server.int.dev.affinionservices.com/config-server
